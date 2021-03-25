@@ -1,0 +1,62 @@
+﻿@model HomeIndexViewModel
+@{
+    ViewData["Title"] = "Humorprogram från Sveriges radio";
+}
+
+<header class="mt-3 mb-5">
+    <h1>Humorprogram från Sveriges radio</h1>
+    <p>Hemsida av Ester Bergström</p>
+    @if (Model.HasPrograms)
+    {
+        <ul>
+            @foreach (HomeIndexViewModel.Channel channel in Model.Channels)
+            {
+                if (channel.Title != "[No channel]")
+                {
+                    <li>
+                        <a href="#@channel.Title">@channel.Title</a>
+                    </li>
+                }
+            }
+        </ul>
+    }
+</header>
+
+@if (Model.HasPrograms)
+{
+    foreach (HomeIndexViewModel.Channel channel in Model.Channels)
+    {
+        <section>
+            <hr />
+            @if (channel.Title != "[No channel]")
+            {
+                <h2 id="@channel.Title">@channel.Title</h2>
+            }
+            @foreach (HomeIndexViewModel.Program program in channel.Programs)
+            {
+                <article class="program mt-3 mb-5">
+                    <img src="@program.ImageUrl" class="program__image d-block w-100 my-2" />
+                    <h3 class="my-1">@program.Title</h3>
+                    <p class="my-1">@program.Description</p>
+                    @foreach (HomeIndexViewModel.PodFile podFile in program.PodFiles)
+                    {
+                        <article class="pod-file mt-2 mb-3">
+                            <time class="pod-file__date d-block text-secondary">@podFile.Date</time>
+                            <div class="mb-1">
+                                <h4 class="d-inline">@podFile.Title</h4>
+                                <p class="pod-file__length d-inline font-weight-light text-secondary">@podFile.Length</p>
+                            </div>
+                            <audio controls class="d-block">
+                                <source src="@podFile.Url" type="audio/mp3" />
+                            </audio>
+                        </article>
+                    }
+                </article>
+            }
+        </section>
+    }
+}
+else
+{
+    <p>Inga program hittades.</p>
+}
